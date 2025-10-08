@@ -9,7 +9,10 @@ This data is very interesting for me and the people who likes to play fifa becau
 For example: the objective for this project are to analyze distributions of player ratings and values, to compare performance metrics across positions and clubs, to investigate correlations between player attributes and market values, and to visualize trends using different tools.
 
 ## Markdown Link
-[Link to HTML File](fifaplayersproject.html) 
+[Link to HTML File](fifaplayersproject.html)
+
 [Link to Rpubs published markdown](https://rpubs.com/gianca907/1346747)
+
+## JSON link
 
 
