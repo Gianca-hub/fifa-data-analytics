@@ -1,0 +1,128 @@
+---
+title: "FIFA player Visualization"
+author: "GIANNCARLO MARTINEZ"
+date: "2025-09-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+```
+
+## Question One
+
+The graph shows the average FIFA player rating by age.
+
+```{r question_one, warning=FALSE}
+#load CSV
+fifa <- read.csv("~/Desktop/fifa_database.csv")
+
+#Do my basic Data aggregating
+overall_by_age <- aggregate(fifa$overall ~ fifa$age, data = fifa, mean, na.rm = TRUE)
+names(overall_by_age) <- c("Age", "AverageOverall")
+
+#plotting
+plot(overall_by_age$Age, overall_by_age$AverageOverall,
+     type = "b", col = "blue", pch = 19,
+     xlab = "Age", 
+     ylab = "Average Overall Rating",
+     main = "Average FIFA Player Rating by Age")
+
+```
+
+## Question Two
+
+My hypothesis is that most players have an overall rating in the 60s with only a small group being elite in 80+ and a small group is low rated below 55. My histogram shows the mode distribution is around 65 to 70.
+
+```{r question two, warning = FALSE}
+#Set up statistic data
+mean_overall <- mean(fifa$overall, na.rm = TRUE)
+median_overall <- median(fifa$overall, na.rm = TRUE)
+sd_overall <- sd(fifa$overall, na.rm = TRUE)
+
+#plotting
+hist(fifa$overall,
+     main = "Distribution of FIFA Player Overall Ratings",
+     xlab = "Overall Rating",
+     col = "red",
+     border = "white")
+```
+
+## Question Three
+
+My statistical test and the scatter plot show how age is an important factor in a players overall performance rating, matching the expected career progression of professional soccer players in the game. FIFA is very good because is a great simulator to play real soccer.
+
+```{r question three, warning = FALSE}
+
+# Filtering data
+filtered_data <- fifa[fifa$age >= 18 & fifa$age <= 35, ]
+
+# numeric values
+filtered_data$age <- as.numeric(as.character(filtered_data$age))
+filtered_data$overall <- as.numeric(as.character(filtered_data$overall))
+
+# Aggregating: average overall rating by age
+overall_by_age <- aggregate(filtered_data$overall ~ filtered_data$age, data = filtered_data, mean)
+names(overall_by_age) <- c("Age", "AverageOverall")
+
+# Correlation test
+correlation <- cor.test(overall_by_age$Age, overall_by_age$AverageOverall)
+
+# Linear model
+LinearModel <- lm(AverageOverall ~ Age, data = overall_by_age)
+summary(LinearModel)
+
+
+# Scatter plot with regression line
+plot(overall_by_age$Age, overall_by_age$AverageOverall,
+     main = "Correlation Between Age and Average Overall Rating",
+     xlab = "Age", 
+     ylab = "Average Overall Rating",
+     pch = 19, col = "green")
+abline(LinearModel, col = "dark red", lwd = 2)
+```
+
+## Question four
+
+In the histogram of player market value is in euros shows a right skewed distribution. The majoriry of the players are clustered on the lower end of the value range, the majority of the players are worth under 20 million of euros. It is moving to the right the frequency of players decrease sharply indicating the high value players are very rare.
+
+```{r question four, warning = FALSE}
+
+# numeric value
+fifa$value_eur <- as.numeric(as.character(fifa$value_eur))
+
+# Plot histogram of player market values
+hist(fifa$value_eur,
+     breaks = 50,
+     col = "orange",
+     border = "white",
+     main = "Distribution of Player Market Values",
+     xlab = "Player Value (Euros)",
+     ylab = "Number of Players",
+     xlim = c(0, quantile(fifa$value_eur, 0.95, na.rm = TRUE))) 
+```
+
+## Question five
+
+I show with my code the player position forward vs midfielder is related to overall rating. it show how significant the posotion are the diference and have a similar distribution.
+
+```{r question five, warning = FALSE}
+
+# Filter dataset
+fifa_groups <- fifa[fifa$player_positions %in% c("ST", "CM"), ]
+
+# Divide into two groups
+forwards <- fifa_groups[fifa_groups$player_positions == "ST", "overall"]
+midfielders <- fifa_groups[fifa_groups$player_positions == "CM", "overall"]
+
+# Perform independent t-test
+t_test_result <- t.test(forwards, midfielders, var.equal = FALSE)
+
+print(t_test_result)
+```
