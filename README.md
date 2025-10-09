@@ -14,6 +14,6 @@ For example: the objective for this project are to analyze distributions of play
 [Link to Rpubs published markdown](https://rpubs.com/gianca907/1346747)
 
 ## JSON link
-[Link to JSON for fifa data analytics](https://github.com/Gianca-hub/fifa-data-analytics.json)
+[Link to JSON for fifa data analytics](https://github.com/Gianca-hub/fifa-data-analytics/blob/main/fifa_database.json)
 
 
